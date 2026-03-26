@@ -11,9 +11,9 @@ A simple and modern daily habit tracking web app.
 * Clean modern UI (dark/light mode)
 * Data saved in browser (LocalStorage)
 
-## 🌐 Live Demo
+## 🌐 Quick start
 
-[👉 Start - Click Here](https://abubakar-khaki.github.io/habit-tracker/habit-tracker.html)
+[👉 Start - Click Here](https://abubakar-khaki.github.io/habit-tracker)
 
 ## 🛠️ Tech Stack
 
