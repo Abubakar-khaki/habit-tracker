@@ -1,15 +1,15 @@
 {
-  "name": "Habit Tracker",
-  "short_name": "Habits",
-  "start_url": "/habit-tracker/",
+  "name": "Nexo Tracker",
+  "short_name": "Nexo",
+  "description": "Daily habit and task tracker",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#080C14",
   "theme_color": "#00CFFF",
+  "orientation": "portrait-primary",
   "icons": [
-    {
-      "src": "icon-2000.png",
-      "sizes": "2000x2000",
-      "type": "image/png"
-    }
+    { "src": "logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }
