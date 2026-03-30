@@ -1,20 +1,11 @@
-const CACHE_NAME = "habit-tracker-v1";
-
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll([
-        "/habit-tracker/",
-        "/habit-tracker/index.html",
-      ]);
-    })
-  );
-});
-
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
-    })
-  );
-});
+const CACHE = 'nexo-v3';
+self.addEventListener('install', e => self.skipWaiting());
+self.addEventListener('activate', e => e.waitUntil(clients.claim()));
+self.addEventListener('fetch', e => e.respondWith(
+  caches.open(CACHE).then(c =>
+    c.match(e.request).then(r => r || fetch(e.request).then(res => {
+      if (e.request.method === 'GET') c.put(e.request, res.clone());
+      return res;
+    }))
+  )
+));
