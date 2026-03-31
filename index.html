@@ -748,9 +748,11 @@ async function installApp() {
 }
 window.addEventListener('appinstalled', () => { document.getElementById('install-btn').style.display = 'none'; });
 
-// ── PWA Setup (simplified)
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
+function setupPWA() {
+  // Just register the service worker with the actual sw.js file
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
 }
 
 // ── KEYBOARD
