@@ -5,428 +5,141 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" id="theme-meta" content="#080C14">
+<meta name="apple-mobile-web-app-title" content="Nexo">
+<meta name="application-name" content="Nexo Tracker">
 <title>Nexo Tracker</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--radius:14px;--radius-sm:9px;--pill:100px;--dur:0.25s;--ease:cubic-bezier(0.4,0,0.2,1)}
+[data-theme="dark"]{--bg:#080C14;--surface:#111827;--surface2:#1A2333;--text:#E2EEFF;--text2:#6B8CAE;--text3:#354E68;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);--neon:#00CFFF;--neon-dim:rgba(0,207,255,0.11);--neon-border:rgba(0,207,255,0.28);--good:#22C55E;--good-dim:rgba(34,197,94,0.13);--bad:#EF4444;--bad-dim:rgba(239,68,68,0.13);--norm-color:#22C55E;--norm-bg:rgba(34,197,94,0.11);--norm-border:rgba(34,197,94,0.28);--imp-color:#FB923C;--imp-bg:rgba(251,146,60,0.12);--imp-border:rgba(251,146,60,0.3);--top-color:#EF4444;--top-bg:rgba(239,68,68,0.12);--top-border:rgba(239,68,68,0.3);--danger:#FF5A7A}
+[data-theme="light"]{--bg:#EFF5FF;--surface:#FFFFFF;--surface2:#E5EFFF;--text:#0B1827;--text2:#3D6080;--text3:#7BA3C0;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.14);--neon:#0077BB;--neon-dim:rgba(0,119,187,0.09);--neon-border:rgba(0,119,187,0.28);--good:#15803D;--good-dim:rgba(21,128,61,0.1);--bad:#B91C1C;--bad-dim:rgba(185,28,28,0.1);--norm-color:#166534;--norm-bg:rgba(21,128,61,0.09);--norm-border:rgba(21,128,61,0.28);--imp-color:#C2580A;--imp-bg:rgba(194,88,10,0.09);--imp-border:rgba(194,88,10,0.28);--top-color:#B91C1C;--top-bg:rgba(185,28,28,0.09);--top-border:rgba(185,28,28,0.28);--danger:#C0392B}
+html{-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;transition:background var(--dur) var(--ease),color var(--dur) var(--ease);overflow-x:hidden}
+body::before{content:'';position:fixed;top:-180px;left:50%;transform:translateX(-50%);width:700px;height:420px;background:radial-gradient(ellipse,rgba(0,207,255,0.055) 0%,transparent 70%);pointer-events:none;z-index:0;animation:glow 8s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:18px 18px 0;transition:background var(--dur) var(--ease)}
+.header-top{display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:16px}
+.app-brand{display:flex;align-items:center;justify-content:center;gap:12px}
+.app-logo{width:44px;height:44px;border-radius:12px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(0,207,255,0.4));animation:logoFloat 3.5s ease-in-out infinite;flex-shrink:0}
+@keyframes logoFloat{0%,100%{transform:translateY(0) rotate(0deg);filter:drop-shadow(0 0 8px rgba(0,207,255,0.4))}50%{transform:translateY(-4px) rotate(1deg);filter:drop-shadow(0 0 16px rgba(0,207,255,0.65))}}
+.app-name{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.3rem,4vw,1.7rem);font-weight:700;letter-spacing:-0.5px;background:linear-gradient(110deg,#FFFFFF 0%,#A8E6FF 40%,#00CFFF 70%,#FFFFFF 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleShimmer 4s linear infinite}
+[data-theme="light"] .app-name{background:linear-gradient(110deg,#0055AA 0%,#0099DD 40%,#00CFFF 70%,#0077BB 100%);background-size:250% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:titleShimmer 4s linear infinite}
+@keyframes titleShimmer{0%{background-position:0% center}100%{background-position:250% center}}
+.header-actions{position:absolute;right:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:7px}
+#install-btn{display:none;padding:6px 13px;background:var(--neon);color:#000;border:none;border-radius:var(--pill);font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer}
+#install-btn:hover{opacity:0.85}
+#theme-btn{width:33px;height:33px;background:var(--surface2);border:1px solid var(--border);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:border-color 0.2s}
+#theme-btn:hover{border-color:var(--neon-border)}
+.nav-tabs{display:grid;grid-template-columns:1fr 1fr}
+.tab-btn{padding:11px 8px;font-family:'Space Grotesk',sans-serif;font-size:0.84rem;font-weight:500;color:var(--text2);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;letter-spacing:0.2px;transition:color 0.2s,border-color 0.2s,background 0.15s}
+.tab-btn.active{color:var(--neon);border-bottom-color:var(--neon)}
+.tab-btn:hover:not(.active){color:var(--text);background:var(--surface2)}
+.page{display:none;padding:16px;max-width:680px;margin:0 auto;position:relative;z-index:1}
+.page.active{display:block;animation:fadeUp 0.28s var(--ease) both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{0%{transform:scale(0.92);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes cardIn{from{opacity:0;transform:translateX(-9px)}to{opacity:1;transform:translateX(0)}}
+@keyframes checkPop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
+@keyframes badgePop{0%{transform:scale(0.8);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.add-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:18px;transition:background var(--dur);animation:popIn 0.3s var(--ease) both}
+.form-row{display:flex;gap:8px;margin-bottom:8px}
+.form-row:last-child{margin-bottom:0}
+.form-input{flex:1;min-width:0;padding:10px 13px;font-size:0.88rem;font-family:'Space Grotesk',sans-serif;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color 0.2s,box-shadow 0.2s,background var(--dur)}
+.form-input:focus{border-color:var(--neon);box-shadow:0 0 0 3px var(--neon-dim)}
+.form-input::placeholder{color:var(--text3)}
+.form-select{padding:10px 11px;font-size:0.82rem;font-family:'Space Grotesk',sans-serif;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;cursor:pointer;transition:border-color 0.2s,background var(--dur);flex-shrink:0}
+.form-select:focus{border-color:var(--neon)}
+.add-btn{padding:10px 18px;background:var(--neon);color:#050D18;border:none;border-radius:var(--radius-sm);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.84rem;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:opacity 0.18s,transform 0.15s,box-shadow 0.18s}
+.add-btn:hover{opacity:1;box-shadow:0 4px 16px rgba(0,180,255,0.25);transform:translateY(-1px)}
+.add-btn:active{transform:scale(0.97)}
+.section-label{font-size:0.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:1.3px;font-weight:600;margin-bottom:10px;padding-left:2px}
+.item-list{display:flex;flex-direction:column;gap:8px}
+.item-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;cursor:default;transition:border-color 0.22s var(--ease),background 0.22s var(--ease),transform 0.18s var(--ease),box-shadow 0.22s var(--ease);animation:cardIn 0.28s var(--ease) both}
+.item-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--border2);transition:background 0.22s,box-shadow 0.22s}
+.item-card:hover{transform:translateX(4px) translateY(-1px);border-color:var(--border2);box-shadow:-3px 4px 18px rgba(0,0,0,0.12)}
+.item-card.good-habit::before{background:var(--good)}
+.item-card.bad-habit::before{background:var(--bad)}
+.item-card.task-card::before{background:var(--neon)}
+.item-card.pri-norm{background:var(--norm-bg);border-color:var(--norm-border)}
+.item-card.pri-imp{background:var(--imp-bg);border-color:var(--imp-border)}
+.item-card.pri-top{background:var(--top-bg);border-color:var(--top-border)}
+.item-card.pri-norm::before{background:var(--norm-color)}
+.item-card.pri-imp::before{background:var(--imp-color)}
+.item-card.pri-top::before{background:var(--top-color)}
+.check-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--border2);background:transparent;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color 0.18s,background 0.18s,box-shadow 0.18s,transform 0.15s}
+.check-btn:hover{border-color:var(--neon);transform:scale(1.12)}
+.check-btn:active{transform:scale(0.94)}
+.item-card.done .check-btn{background:var(--neon);border-color:var(--neon);box-shadow:0 0 8px rgba(0,207,255,0.35)}
+.item-card.good-habit.done .check-btn{background:var(--good);border-color:var(--good);box-shadow:0 0 8px rgba(34,197,94,0.35)}
+.item-card.bad-habit.done .check-btn{background:var(--bad);border-color:var(--bad);box-shadow:0 0 8px rgba(239,68,68,0.35)}
+.check-icon{display:none}
+.item-card.done .check-icon{display:block;animation:checkPop 0.28s cubic-bezier(0.175,0.885,0.32,1.5) both}
+.item-info{flex:1;min-width:0}
+.item-name{font-size:0.9rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.2s}
+.item-card.good-habit .item-name{color:var(--good)}
+.item-card.bad-habit .item-name{color:var(--bad)}
+.item-card.task-card .item-name{color:var(--good)}
+.item-card.done .item-name{text-decoration:line-through;color:var(--text3)!important}
+.item-meta{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:4px}
+.badge{padding:2px 7px;border-radius:100px;font-size:0.63rem;font-weight:600;letter-spacing:0.4px;white-space:nowrap;animation:badgePop 0.22s var(--ease) both}
+.b-good{background:var(--good-dim);color:var(--good)}
+.b-bad{background:var(--bad-dim);color:var(--bad)}
+.b-neon{background:var(--neon-dim);color:var(--neon)}
+.b-norm{background:var(--norm-bg);color:var(--norm-color);border:1px solid var(--norm-border)}
+.b-imp{background:var(--imp-bg);color:var(--imp-color);border:1px solid var(--imp-border)}
+.b-top{background:var(--top-bg);color:var(--top-color);border:1px solid var(--top-border)}
+.b-muted{background:var(--surface2);color:var(--text2)}
+.b-purple{background:rgba(139,92,246,0.12);color:#8B5CF6}
+.del-btn{background:none;border:none;cursor:pointer;color:var(--text3);padding:5px;border-radius:7px;display:flex;align-items:center;flex-shrink:0;opacity:0;transition:opacity 0.18s,color 0.18s,background 0.18s,transform 0.18s}
+.item-card:hover .del-btn{opacity:1}
+.del-btn:hover{color:var(--danger);background:rgba(239,68,68,0.1);transform:scale(1.1)}
+.empty-state{text-align:center;padding:2.5rem 1rem;background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);color:var(--text2)}
+.empty-icon{font-size:2rem;margin-bottom:0.55rem;animation:float 3s ease-in-out infinite}
+.empty-state p{font-size:0.84rem}
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--neon-border);border-radius:var(--pill);padding:10px 24px;font-size:0.84rem;font-weight:600;color:var(--neon);box-shadow:0 8px 30px rgba(0,0,0,0.25);z-index:9999;pointer-events:none;white-space:nowrap;opacity:0;transition:transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275),opacity 0.35s}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media(max-width:500px){.form-row{flex-wrap:wrap}.form-input{flex-basis:100%}.del-btn{opacity:1}}
 
-:root {
-  --radius: 14px;
-  --radius-sm: 9px;
-  --pill: 100px;
-  --dur: 0.25s;
-  --ease: cubic-bezier(0.4,0,0.2,1);
+/* ── INSTALL POPUP ── */
+#install-popup{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+  width:calc(100% - 32px);max-width:400px;
+  background:var(--surface);
+  border:1px solid var(--neon-border);
+  border-radius:18px;
+  padding:18px 18px 16px;
+  z-index:9998;
+  box-shadow:0 8px 40px rgba(0,207,255,0.18),0 2px 16px rgba(0,0,0,0.4);
+  opacity:0;pointer-events:none;
+  transition:transform 0.45s cubic-bezier(0.175,0.885,0.32,1.275),opacity 0.35s ease;
 }
-
-[data-theme="dark"] {
-  --bg:       #080C14;
-  --surface:  #111827;
-  --surface2: #1A2333;
-  --surface3: #222E42;
-  --text:     #E2EEFF;
-  --text2:    #6B8CAE;
-  --text3:    #354E68;
-  --border:   rgba(255,255,255,0.06);
-  --border2:  rgba(255,255,255,0.13);
-  --neon:          #00CFFF;
-  --neon-dim:      rgba(0,207,255,0.11);
-  --neon-border:   rgba(0,207,255,0.28);
-  --good:      #22C55E;
-  --good-dim:  rgba(34,197,94,0.13);
-  --bad:       #EF4444;
-  --bad-dim:   rgba(239,68,68,0.13);
-  --norm-color: #22C55E;
-  --norm-bg:    rgba(34,197,94,0.11);
-  --norm-border:rgba(34,197,94,0.28);
-  --imp-color:  #FB923C;
-  --imp-bg:     rgba(251,146,60,0.12);
-  --imp-border: rgba(251,146,60,0.3);
-  --top-color:  #EF4444;
-  --top-bg:     rgba(239,68,68,0.12);
-  --top-border: rgba(239,68,68,0.3);
-  --danger:    #FF5A7A;
-}
-
-[data-theme="light"] {
-  --bg:       #EFF5FF;
-  --surface:  #FFFFFF;
-  --surface2: #E5EFFF;
-  --surface3: #D9E8FF;
-  --text:     #0B1827;
-  --text2:    #3D6080;
-  --text3:    #7BA3C0;
-  --border:   rgba(0,0,0,0.07);
-  --border2:  rgba(0,0,0,0.14);
-  --neon:          #0077BB;
-  --neon-dim:      rgba(0,119,187,0.09);
-  --neon-border:   rgba(0,119,187,0.28);
-  --good:      #15803D;
-  --good-dim:  rgba(21,128,61,0.1);
-  --bad:       #B91C1C;
-  --bad-dim:   rgba(185,28,28,0.1);
-  --norm-color: #166534;
-  --norm-bg:    rgba(21,128,61,0.09);
-  --norm-border:rgba(21,128,61,0.28);
-  --imp-color:  #C2580A;
-  --imp-bg:     rgba(194,88,10,0.09);
-  --imp-border: rgba(194,88,10,0.28);
-  --top-color:  #B91C1C;
-  --top-bg:     rgba(185,28,28,0.09);
-  --top-border: rgba(185,28,28,0.28);
-  --danger:    #C0392B;
-}
-
-html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Space Grotesk', sans-serif;
-  min-height: 100vh;
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
-  overflow-x: hidden;
-}
-
-body::before {
-  content: '';
-  position: fixed; top: -180px; left: 50%; transform: translateX(-50%);
-  width: 700px; height: 420px;
-  background: radial-gradient(ellipse, rgba(0,207,255,0.055) 0%, transparent 70%);
-  pointer-events: none; z-index: 0;
-  animation: glow 8s ease-in-out infinite;
-}
-@keyframes glow { 0%,100%{opacity:.6} 50%{opacity:1} }
-
-/* ── HEADER ── */
-.app-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-  padding: 18px 18px 0;
-  transition: background var(--dur) var(--ease);
-}
-.header-top {
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-  margin-bottom: 16px;
-}
-.app-brand {
-  display: flex; align-items: center; justify-content: center;
-  gap: 12px;
-
-
-}
-.app-logo {
-  width: 44px; height: 44px; border-radius: 12px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 8px rgba(0,207,255,0.4));
-  animation: logoFloat 3.5s ease-in-out infinite;
-  flex-shrink: 0;
-}
-@keyframes logoFloat {
-  0%,100% { transform: translateY(0) rotate(0deg); filter: drop-shadow(0 0 8px rgba(0,207,255,0.4)); }
-  50%      { transform: translateY(-4px) rotate(1deg); filter: drop-shadow(0 0 16px rgba(0,207,255,0.65)); }
-}
-.app-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: clamp(1.3rem, 4vw, 1.7rem);
-  font-weight: 700;
-  letter-spacing: -0.5px;
-  background: linear-gradient(110deg, #FFFFFF 0%, #A8E6FF 40%, #00CFFF 70%, #FFFFFF 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: titleShimmer 4s linear infinite;
-}
-[data-theme="light"] .app-name {
-  background: linear-gradient(110deg, #0055AA 0%, #0099DD 40%, #00CFFF 70%, #0077BB 100%);
-  background-size: 250% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: titleShimmer 4s linear infinite;
-}
-@keyframes titleShimmer {
-  0%   { background-position: 0% center; }
-  100% { background-position: 250% center; }
-}
-.header-actions {
-  position: absolute; right: 0; top: 50%;
-  transform: translateY(-50%);
-  display: flex; align-items: center; gap: 7px;
-}
-
-
-
-
-#install-btn {
-  display: none;
-  padding: 6px 13px;
-  background: var(--neon); color: #000;
-  border: none; border-radius: var(--pill);
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.72rem; font-weight: 700; cursor: pointer;
-  animation: fadeIn 0.3s ease;
-}
-#install-btn:hover { opacity: 0.85; }
-
-#theme-btn {
-  width: 33px; height: 33px;
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 50%; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px; transition: border-color 0.2s;
-}
-#theme-btn:hover { border-color: var(--neon-border); }
-
-/* ── TABS ── */
-.nav-tabs {
-  display: grid; grid-template-columns: 1fr 1fr;
-}
-.tab-btn {
-  padding: 11px 8px;
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 0.84rem; font-weight: 500;
-  color: var(--text2); background: none; border: none;
-  border-bottom: 2px solid transparent;
-  cursor: pointer; letter-spacing: 0.2px;
-  transition: color 0.2s, border-color 0.2s;
-}
-.tab-btn.active { color: var(--neon); border-bottom-color: var(--neon); }
-
-/* ── PAGES ── */
-.page { display: none; padding: 16px; max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
-.page.active { display: block; animation: fadeUp 0.28s var(--ease) both; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-/* ── ADD FORM ── */
-.add-form {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px; margin-bottom: 18px;
-  transition: background var(--dur);
-}
-.form-row { display: flex; gap: 8px; margin-bottom: 8px; }
-.form-row:last-child { margin-bottom: 0; }
-
-.form-input {
-  flex: 1; min-width: 0;
-  padding: 10px 13px;
-  font-size: 0.88rem; font-family: 'Space Grotesk', sans-serif;
-  background: var(--surface2); color: var(--text);
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  outline: none; transition: border-color 0.2s, box-shadow 0.2s, background var(--dur);
-}
-.form-input:focus { border-color: var(--neon); box-shadow: 0 0 0 3px var(--neon-dim); }
-.form-input::placeholder { color: var(--text3); }
-
-.form-select {
-  padding: 10px 11px;
-  font-size: 0.82rem; font-family: 'Space Grotesk', sans-serif;
-  background: var(--surface2); color: var(--text);
-  border: 1px solid var(--border); border-radius: var(--radius-sm);
-  outline: none; cursor: pointer;
-  transition: border-color 0.2s, background var(--dur);
-  flex-shrink: 0;
-}
-.form-select:focus { border-color: var(--neon); }
-
-.add-btn {
-  padding: 10px 18px;
-  background: var(--neon); color: #050D18;
-  border: none; border-radius: var(--radius-sm);
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700; font-size: 0.84rem; cursor: pointer;
-  white-space: nowrap; flex-shrink: 0;
-  transition: opacity 0.2s, transform 0.15s;
-}
-.add-btn:hover { opacity: 0.88; }
-.add-btn:active { transform: scale(0.97); }
-
-/* ── SECTION LABEL ── */
-.section-label {
-  font-size: 0.67rem; color: var(--text3);
-  text-transform: uppercase; letter-spacing: 1.3px; font-weight: 600;
-  margin-bottom: 10px; padding-left: 2px;
-}
-
-/* ── ITEM LIST ── */
-.item-list { display: flex; flex-direction: column; gap: 8px; }
-
-/* ── ITEM CARD ── */
-.item-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px 14px;
-  display: flex; align-items: center; gap: 12px;
-  position: relative; overflow: hidden;
-  cursor: default;
-  transition:
-    border-color 0.22s var(--ease),
-    background 0.22s var(--ease),
-    transform 0.18s var(--ease),
-    box-shadow 0.22s;
-  animation: cardIn 0.28s var(--ease) both;
-}
-@keyframes cardIn { from{opacity:0;transform:translateX(-9px)} to{opacity:1;transform:translateX(0)} }
-
-.item-card::before {
-  content: ''; position: absolute;
-  left: 0; top: 0; bottom: 0; width: 3px;
-  border-radius: 3px 0 0 3px;
-  background: var(--border2);
-  transition: background 0.22s, box-shadow 0.22s;
-}
-.item-card:hover { transform: translateX(3px); border-color: var(--border2); }
-
-.item-card.good-habit::before { background: var(--good); }
-.item-card.bad-habit::before  { background: var(--bad); }
-.item-card.task-card::before  { background: var(--neon); }
-
-.item-card.pri-norm { background: var(--norm-bg); border-color: var(--norm-border); }
-.item-card.pri-imp  { background: var(--imp-bg);  border-color: var(--imp-border); }
-.item-card.pri-top  { background: var(--top-bg);  border-color: var(--top-border); }
-
-.item-card.pri-norm::before { background: var(--norm-color); }
-.item-card.pri-imp::before  { background: var(--imp-color); }
-.item-card.pri-top::before  { background: var(--top-color); }
-
-/* ── CHECK BUTTON ── */
-.check-btn {
-  width: 24px; height: 24px; border-radius: 50%;
-  border: 2px solid var(--border2); background: transparent;
-  cursor: pointer; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-}
-.check-btn:hover { border-color: var(--neon); }
-
-.item-card.done .check-btn { background: var(--neon); border-color: var(--neon); box-shadow: 0 0 8px rgba(0,207,255,0.35); }
-.item-card.good-habit.done .check-btn { background: var(--good); border-color: var(--good); box-shadow: 0 0 8px rgba(34,197,94,0.35); }
-.item-card.bad-habit.done  .check-btn { background: var(--bad);  border-color: var(--bad);  box-shadow: 0 0 8px rgba(239,68,68,0.35); }
-
-.check-icon { display: none; }
-.item-card.done .check-icon { display: block; animation: checkPop 0.28s cubic-bezier(0.175,0.885,0.32,1.5) both; }
-@keyframes checkPop { from{transform:scale(0) rotate(-20deg)} to{transform:scale(1) rotate(0)} }
-
-/* ── ITEM INFO ── */
-.item-info { flex: 1; min-width: 0; }
-
-.item-name {
-  font-size: 0.9rem; font-weight: 500; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  transition: color 0.2s;
-}
-.item-card.good-habit .item-name { color: var(--good); }
-.item-card.bad-habit  .item-name { color: var(--bad); }
-.item-card.done .item-name { text-decoration: line-through; color: var(--text3) !important; }
-
-.item-meta {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
-  margin-top: 4px;
-}
-
-.badge {
-  padding: 2px 7px; border-radius: 100px;
-  font-size: 0.63rem; font-weight: 600;
-  letter-spacing: 0.4px; white-space: nowrap;
-}
-.b-good   { background: var(--good-dim); color: var(--good); }
-.b-bad    { background: var(--bad-dim);  color: var(--bad); }
-.b-neon   { background: var(--neon-dim); color: var(--neon); }
-.b-norm   { background: var(--norm-bg);  color: var(--norm-color); border: 1px solid var(--norm-border); }
-.b-imp    { background: var(--imp-bg);   color: var(--imp-color);  border: 1px solid var(--imp-border); }
-.b-top    { background: var(--top-bg);   color: var(--top-color);  border: 1px solid var(--top-border); }
-.b-muted  { background: var(--surface2); color: var(--text2); }
-.b-purple { background: rgba(139,92,246,0.12); color: #8B5CF6; }
-
-.item-card.task-card .item-name { color: var(--good); }
-.item-card.task-card.done .item-name { color: var(--text3) !important; text-decoration: line-through; }
-
-/* ── ENHANCED ANIMATIONS ── */
-@keyframes badgePop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
-@keyframes slideRight { from{opacity:0;transform:translateX(-14px)} to{opacity:1;transform:translateX(0)} }
-@keyframes popIn { 0%{transform:scale(0.92);opacity:0} 100%{transform:scale(1);opacity:1} }
-
-.badge { animation: badgePop 0.22s var(--ease) both; }
-.add-form { animation: popIn 0.3s var(--ease) both; }
-
-.item-card { transition:
-  border-color 0.22s var(--ease),
-  background 0.22s var(--ease),
-  transform 0.18s var(--ease),
-  box-shadow 0.22s var(--ease),
-  opacity 0.22s var(--ease);
-}
-.item-card:hover {
-  transform: translateX(4px) translateY(-1px);
-  box-shadow: -3px 4px 18px rgba(0,0,0,0.12);
-}
-.check-btn {
-  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s, transform 0.15s;
-}
-.check-btn:hover { transform: scale(1.12); }
-.check-btn:active { transform: scale(0.94); }
-
-.tab-btn { transition: color 0.2s, border-color 0.2s, background 0.15s; }
-.tab-btn:hover:not(.active) { color: var(--text); background: var(--surface2); }
-
-.add-btn { transition: opacity 0.18s, transform 0.15s, box-shadow 0.18s; }
-.add-btn:hover { opacity: 1; box-shadow: 0 4px 16px rgba(0,180,255,0.25); transform: translateY(-1px); }
-.del-btn {
-  background: none; border: none; cursor: pointer; color: var(--text3);
-  padding: 5px; border-radius: 7px;
-  display: flex; align-items: center; flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.18s, color 0.18s, background 0.18s, transform 0.18s;
-}
-.item-card:hover .del-btn { opacity: 1; }
-.del-btn:hover { color: var(--danger); background: rgba(239,68,68,0.1); transform: scale(1.1); }
-
-/* ── EMPTY ── */
-.empty-state {
-  text-align: center; padding: 2.5rem 1rem;
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
-  color: var(--text2);
-}
-.empty-icon { font-size: 2rem; margin-bottom: 0.55rem; animation: float 3s ease-in-out infinite; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-.empty-state p { font-size: 0.84rem; }
-
-/* ── TOAST ── */
-#toast {
-  position: fixed; bottom: 28px; left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--surface);
-  border: 1px solid var(--neon-border);
-  border-radius: var(--pill);
-  padding: 10px 24px;
-  font-size: 0.84rem; font-weight: 600;
-  color: var(--neon);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  z-index: 9999; pointer-events: none;
-  white-space: nowrap; opacity: 0;
-  transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275), opacity 0.35s;
-}
-#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-@media (max-width: 500px) {
-  .form-row { flex-wrap: wrap; }
-  .form-input { flex-basis: 100%; }
-  .del-btn { opacity: 1; }
-}
+#install-popup.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:all}
+.ip-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ip-logo{width:46px;height:46px;border-radius:12px;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(0,207,255,0.35))}
+.ip-text{flex:1}
+.ip-title{font-size:0.95rem;font-weight:700;color:var(--text);margin-bottom:2px}
+.ip-sub{font-size:0.75rem;color:var(--text2);line-height:1.4}
+.ip-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;padding:2px 4px;line-height:1;flex-shrink:0;transition:color 0.2s}
+.ip-close:hover{color:var(--text)}
+.ip-actions{display:flex;gap:9px}
+.ip-install{flex:1;padding:11px;background:var(--neon);color:#050D18;border:none;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.88rem;cursor:pointer;transition:opacity 0.18s,transform 0.15s,box-shadow 0.2s}
+.ip-install:hover{opacity:0.9;box-shadow:0 4px 18px rgba(0,207,255,0.3);transform:translateY(-1px)}
+.ip-install:active{transform:scale(0.97)}
+.ip-later{flex:0 0 auto;padding:11px 16px;background:var(--surface2);color:var(--text2);border:1px solid var(--border);border-radius:10px;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:0.82rem;cursor:pointer;transition:background 0.18s,color 0.18s}
+.ip-later:hover{background:var(--surface3);color:var(--text)}
+.ip-bar{height:3px;background:var(--surface2);border-radius:100px;margin-top:14px;overflow:hidden}
+.ip-bar-fill{height:100%;width:100%;border-radius:100px;background:linear-gradient(90deg,#0099DD,var(--neon));animation:ipBarShrink 8s linear forwards}
+@keyframes ipBarShrink{from{width:100%}to{width:0%}}
 </style>
 </head>
 <body>
-
 <div class="app-header">
   <div class="header-top">
     <div class="app-brand">
@@ -434,48 +147,46 @@ body::before {
       <span class="app-name">Nexo Tracker</span>
     </div>
     <div class="header-actions">
-      <button id="install-btn" onclick="installApp()">⬇ Install App</button>
-      <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <button id="install-btn" onclick="installApp()">&#8659; Install</button>
+      <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme">&#127769;</button>
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('habits')">✔ Habits</button>
-    <button class="tab-btn" onclick="switchTab('tasks')">📋 Tasks</button>
+    <button class="tab-btn active" onclick="switchTab('habits')">&#10004; Habits</button>
+    <button class="tab-btn" onclick="switchTab('tasks')">&#128203; Tasks</button>
   </div>
 </div>
 
-<!-- ═══ HABITS PAGE ═══ -->
 <div class="page active" id="page-habits">
   <div class="add-form">
     <div class="form-row">
-      <input class="form-input" id="h-name" type="text" placeholder="Habit name… e.g. Morning run" maxlength="60">
+      <input class="form-input" id="h-name" type="text" placeholder="Habit name e.g. Morning run" maxlength="60">
       <select class="form-select" id="h-type">
-        <option value="good">✔ Good</option>
-        <option value="bad">🚫 Bad</option>
+        <option value="good">&#10004; Good</option>
+        <option value="bad">&#128683; Bad</option>
       </select>
     </div>
     <div class="form-row">
       <select class="form-select" id="h-pri" style="flex:1">
         <option value="normal">Normal</option>
-        <option value="imp">⚡ Important</option>
-        <option value="top">🔥 Most Important</option>
+        <option value="imp">&#9889; Important</option>
+        <option value="top">&#128293; Most Important</option>
       </select>
       <button class="add-btn" onclick="addHabit()">+ Add Habit</button>
     </div>
   </div>
   <div class="section-label" id="h-label">Today's Habits</div>
   <div id="h-empty" class="empty-state" style="display:none">
-    <div class="empty-icon">🌱</div>
-    <p>No habits yet — add your first one above!</p>
+    <div class="empty-icon">&#127807;</div>
+    <p>No habits yet &#8212; add your first one above!</p>
   </div>
   <div class="item-list" id="h-list"></div>
 </div>
 
-<!-- ═══ TASKS PAGE ═══ -->
 <div class="page" id="page-tasks">
   <div class="add-form">
     <div class="form-row">
-      <input class="form-input" id="t-name" type="text" placeholder="Task name… e.g. Review notes" maxlength="60">
+      <input class="form-input" id="t-name" type="text" placeholder="Task name e.g. Review notes" maxlength="60">
       <select class="form-select" id="t-type">
         <option value="once">Once</option>
         <option value="daily">Daily</option>
@@ -485,74 +196,78 @@ body::before {
     <div class="form-row">
       <select class="form-select" id="t-pri" style="flex:1">
         <option value="normal">Normal</option>
-        <option value="imp">⚡ Important</option>
-        <option value="top">🔥 Most Important</option>
+        <option value="imp">&#9889; Important</option>
+        <option value="top">&#128293; Most Important</option>
       </select>
       <button class="add-btn" onclick="addTask()">+ Add Task</button>
     </div>
   </div>
   <div class="section-label" id="t-label">Tasks</div>
   <div id="t-empty" class="empty-state" style="display:none">
-    <div class="empty-icon">📋</div>
-    <p>No tasks yet — add your first one above!</p>
+    <div class="empty-icon">&#128203;</div>
+    <p>No tasks yet &#8212; add your first one above!</p>
   </div>
   <div class="item-list" id="t-list"></div>
 </div>
 
+<div id="install-popup">
+  <div class="ip-top">
+    <img class="ip-logo" id="ip-logo-img" src="" alt="Nexo">
+    <div class="ip-text">
+      <div class="ip-title">Install Nexo Tracker</div>
+      <div class="ip-sub">Add to home screen for the best experience &mdash; works offline too!</div>
+    </div>
+    <button class="ip-close" onclick="dismissPopup()" title="Close">&#10005;</button>
+  </div>
+  <div class="ip-actions">
+    <button class="ip-install" onclick="installFromPopup()">&#8659;&nbsp; Install App</button>
+    <button class="ip-later" onclick="dismissPopup()">Not now</button>
+  </div>
+  <div class="ip-bar"><div class="ip-bar-fill" id="ip-bar-fill"></div></div>
+</div>
+
 <div id="toast"></div>
-
 <script>
-// ── KEYS
-const KH = 'nx2_habits', KT = 'nx2_tasks', KTH = 'nx2_theme';
 
-// ── DATA
+const KH = 'nx2_habits', KT = 'nx2_tasks', KTH = 'nx2_theme';
 let habits = [], tasks = [];
 
-// ── HELPERS
 function todayStr() {
   const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 function weekStr() {
   const d = new Date();
   const d2 = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = d2.getUTCDay() || 7;
-  d2.setUTCDate(d2.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d2.getUTCFullYear(), 0, 1));
-  const week = Math.ceil((((d2 - yearStart) / 86400000) + 1) / 7);
-  return `${d2.getUTCFullYear()}-W${week}`;
+  const dn = d2.getUTCDay() || 7;
+  d2.setUTCDate(d2.getUTCDate() + 4 - dn);
+  const ys = new Date(Date.UTC(d2.getUTCFullYear(), 0, 1));
+  const wk = Math.ceil((((d2 - ys) / 86400000) + 1) / 7);
+  return d2.getUTCFullYear() + '-W' + wk;
 }
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
-// ── STORAGE
 function load() {
-  try { habits = JSON.parse(localStorage.getItem(KH)) || []; } catch(e){ habits=[]; }
-  try { tasks  = JSON.parse(localStorage.getItem(KT)) || []; } catch(e){ tasks=[]; }
+  try { habits = JSON.parse(localStorage.getItem(KH)) || []; } catch(e) { habits = []; }
+  try { tasks  = JSON.parse(localStorage.getItem(KT))  || []; } catch(e) { tasks  = []; }
 }
 const saveH = () => localStorage.setItem(KH, JSON.stringify(habits));
 const saveT = () => localStorage.setItem(KT, JSON.stringify(tasks));
 
-// ── RESET
 function resetIfNeeded() {
   const today = todayStr(), week = weekStr();
   let ch = false;
   habits.forEach(h => { if (h.doneDate !== today) { h.done = false; h.doneDate = null; ch = true; } });
   tasks.forEach(t => {
-    if (t.taskType === 'daily' && t.doneDate !== today) { t.done = false; t.doneDate = null; ch = true; }
-    if (t.taskType === 'weekly' && t.doneWeek !== week) { t.done = false; t.doneWeek = null; ch = true; }
+    if (t.taskType === 'daily'  && t.doneDate !== today) { t.done = false; t.doneDate = null; ch = true; }
+    if (t.taskType === 'weekly' && t.doneWeek !== week)  { t.done = false; t.doneWeek = null; ch = true; }
   });
   if (ch) { saveH(); saveT(); }
 }
 
-// ── MOTIVATION
-const MSGS = [
-  "Good job! 🎯","Keep going! 💪","You are improving! 📈",
-  "Crushing it! ⚡","Amazing work! 🔥","Stay consistent! 🏆",
-  "One step closer! 👣","You got this! 💥","Progress made! ✨","Habit locked in! 🔒"
-];
-const MSGS_TOP = ["HUGE win! 🏆","Top priority done! 🔥","You're on fire! ⚡","Outstanding! 🌟","Priority crushed! 💪"];
+const MSGS     = ['Good job! 🎯','Keep going! 💪','You are improving! 📈','Crushing it! ⚡','Amazing work! 🔥','Stay consistent! 🏆','One step closer! 👣','You got this! 💥','Progress made! ✨','Habit locked in! 🔒'];
+const MSGS_TOP = ['HUGE win! 🏆','Top priority done! 🔥',"You're on fire! ⚡",'Outstanding! 🌟','Priority crushed! 💪'];
 let toastTimer;
 function showToast(msg) {
   const el = document.getElementById('toast');
@@ -565,7 +280,6 @@ function motivate(pri) {
   showToast(pool[Math.floor(Math.random() * pool.length)]);
 }
 
-// ── BADGE HELPERS
 function priBadge(p) {
   if (p === 'top') return '<span class="badge b-top">🔴 Most Important</span>';
   if (p === 'imp') return '<span class="badge b-imp">🟠 Important</span>';
@@ -577,153 +291,107 @@ function priClass(p) {
   return 'pri-norm';
 }
 
-// ── ADD HABIT
 function addHabit() {
   const el = document.getElementById('h-name');
   const name = el.value.trim();
-  if (!name) { el.focus(); el.style.borderColor='var(--bad)'; setTimeout(()=>el.style.borderColor='',800); return; }
-  habits.push({
-    id: Date.now().toString(), name,
-    habitType: document.getElementById('h-type').value,
-    priority:  document.getElementById('h-pri').value,
-    done: false, doneDate: null
-  });
+  if (!name) { el.focus(); el.style.borderColor = 'var(--bad)'; setTimeout(() => el.style.borderColor = '', 800); return; }
+  habits.push({ id: Date.now().toString(), name, habitType: document.getElementById('h-type').value, priority: document.getElementById('h-pri').value, done: false, doneDate: null });
   saveH(); el.value = ''; el.focus(); renderHabits();
 }
 
-// ── ADD TASK
 function addTask() {
   const el = document.getElementById('t-name');
   const name = el.value.trim();
-  if (!name) { el.focus(); el.style.borderColor='var(--bad)'; setTimeout(()=>el.style.borderColor='',800); return; }
-  tasks.push({
-    id: Date.now().toString(), name,
-    taskType: document.getElementById('t-type').value,
-    priority: document.getElementById('t-pri').value,
-    done: false, doneDate: null, doneWeek: null
-  });
+  if (!name) { el.focus(); el.style.borderColor = 'var(--bad)'; setTimeout(() => el.style.borderColor = '', 800); return; }
+  tasks.push({ id: Date.now().toString(), name, taskType: document.getElementById('t-type').value, priority: document.getElementById('t-pri').value, done: false, doneDate: null, doneWeek: null });
   saveT(); el.value = ''; el.focus(); renderTasks();
 }
 
-// ── TOGGLE HABIT
 function toggleHabit(id) {
-  const h = habits.find(x => x.id === id); if (!h) return;
+  const h = habits.find(x => x.id === id);
+  if (!h) return;
   h.done = !h.done; h.doneDate = h.done ? todayStr() : null;
   saveH(); if (h.done) motivate(h.priority); renderHabits();
 }
 
-// ── TOGGLE TASK
 function toggleTask(id) {
-  const t = tasks.find(x => x.id === id); if (!t) return;
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
   t.done = !t.done;
   if (t.done) { t.doneDate = todayStr(); t.doneWeek = weekStr(); }
   else { t.doneDate = null; t.doneWeek = null; }
   saveT(); if (t.done) motivate(t.priority); renderTasks();
 }
 
-// ── DELETE
 function delHabit(id) { habits = habits.filter(x => x.id !== id); saveH(); renderHabits(); }
-function delTask(id)   { tasks  = tasks.filter(x => x.id !== id);  saveT(); renderTasks(); }
+function delTask(id)  { tasks  = tasks.filter(x => x.id !== id);  saveT(); renderTasks(); }
 
-// ── CHECK SVG
-const checkSvg = `<svg class="check-icon" width="10" height="8" viewBox="0 0 10 8" fill="none">
-  <path d="M1 3.5L3.5 6.5L9 1" stroke="#050D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
+const checkSvg = '<svg class="check-icon" width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 3.5L3.5 6.5L9 1" stroke="#050D18" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const delSvg   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
 
-// ── DELETE SVG
-const delSvg = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
-  <path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
-</svg>`;
-
-// ── RENDER HABITS
 function renderHabits() {
-  const list = document.getElementById('h-list');
+  const list  = document.getElementById('h-list');
   const empty = document.getElementById('h-empty');
   const label = document.getElementById('h-label');
-  const done = habits.filter(h => h.done).length;
-  label.textContent = habits.length ? `Today's Habits — ${done}/${habits.length} done` : "Today's Habits";
+  const done  = habits.filter(h => h.done).length;
+  label.textContent = habits.length ? "Today's Habits \u2014 " + done + '/' + habits.length + ' done' : "Today's Habits";
   if (!habits.length) { empty.style.display = 'block'; list.innerHTML = ''; return; }
-  empty.style.display = 'none';
-  list.innerHTML = '';
+  empty.style.display = 'none'; list.innerHTML = '';
   const priOrder = { top: 0, imp: 1, normal: 2 };
   const sorted = [...habits].sort((a, b) => (priOrder[a.priority] ?? 2) - (priOrder[b.priority] ?? 2));
   sorted.forEach((h, i) => {
-    const el = document.createElement('div');
-    const hClass = h.habitType === 'good' ? 'good-habit' : 'bad-habit';
-    el.className = `item-card ${hClass} ${priClass(h.priority)} ${h.done ? 'done' : ''}`;
-    el.style.animationDelay = `${i * 0.04}s`;
-    const typeBadge = h.habitType === 'good'
-      ? '<span class="badge b-good">✔ Good</span>'
-      : '<span class="badge b-bad">🚫 Bad</span>';
-    const doneInfo = h.done
-      ? `<span class="badge b-muted">${h.habitType === 'good' ? 'Done today' : 'Avoided today'}</span>`
-      : '';
-    el.innerHTML = `
-      <button class="check-btn" onclick="toggleHabit('${h.id}')">${checkSvg}</button>
-      <div class="item-info">
-        <div class="item-name">${esc(h.name)}</div>
-        <div class="item-meta">${typeBadge}${priBadge(h.priority)}${doneInfo}</div>
-      </div>
-      <button class="del-btn" onclick="delHabit('${h.id}')">${delSvg}</button>`;
-    list.appendChild(el);
+    const div  = document.createElement('div');
+    const hCls = h.habitType === 'good' ? 'good-habit' : 'bad-habit';
+    div.className = 'item-card ' + hCls + ' ' + priClass(h.priority) + (h.done ? ' done' : '');
+    div.style.animationDelay = (i * 0.04) + 's';
+    const tBadge = h.habitType === 'good' ? '<span class="badge b-good">\u2714 Good</span>' : '<span class="badge b-bad">\uD83D\uDEAB Bad</span>';
+    const dInfo  = h.done ? '<span class="badge b-muted">' + (h.habitType === 'good' ? 'Done today' : 'Avoided today') + '</span>' : '';
+    div.innerHTML = '<button class="check-btn" onclick="toggleHabit(\'' + h.id + '\')">' + checkSvg + '</button>'
+      + '<div class="item-info"><div class="item-name">' + esc(h.name) + '</div>'
+      + '<div class="item-meta">' + tBadge + priBadge(h.priority) + dInfo + '</div></div>'
+      + '<button class="del-btn" onclick="delHabit(\'' + h.id + '\')">' + delSvg + '</button>';
+    list.appendChild(div);
   });
 }
 
-// ── RENDER TASKS
 function renderTasks() {
-  const list = document.getElementById('t-list');
+  const list  = document.getElementById('t-list');
   const empty = document.getElementById('t-empty');
   const label = document.getElementById('t-label');
-  const done = tasks.filter(t => t.done).length;
-  label.textContent = tasks.length ? `Tasks — ${done}/${tasks.length} done` : 'Tasks';
+  const done  = tasks.filter(t => t.done).length;
+  label.textContent = tasks.length ? 'Tasks \u2014 ' + done + '/' + tasks.length + ' done' : 'Tasks';
   if (!tasks.length) { empty.style.display = 'block'; list.innerHTML = ''; return; }
-  empty.style.display = 'none';
-  list.innerHTML = '';
+  empty.style.display = 'none'; list.innerHTML = '';
   const typeOrder = { daily: 0, once: 1, weekly: 2 };
   const priOrder  = { top: 0, imp: 1, normal: 2 };
+  const tBadgeMap = { once: '<span class="badge b-muted">Once</span>', daily: '<span class="badge b-neon">Daily</span>', weekly: '<span class="badge b-purple">Weekly</span>' };
+  const resetLbl  = { daily: '<span class="badge b-muted">resets daily</span>', weekly: '<span class="badge b-muted">resets weekly</span>' };
   const sorted = [...tasks].sort((a, b) => {
     const td = (typeOrder[a.taskType] ?? 1) - (typeOrder[b.taskType] ?? 1);
-    if (td !== 0) return td;
-    return (priOrder[a.priority] ?? 2) - (priOrder[b.priority] ?? 2);
+    return td !== 0 ? td : (priOrder[a.priority] ?? 2) - (priOrder[b.priority] ?? 2);
   });
-  const typeBadgeMap = {
-    once:   '<span class="badge b-muted">Once</span>',
-    daily:  '<span class="badge b-neon">Daily</span>',
-    weekly: '<span class="badge b-purple">Weekly</span>'
-  };
-  const resetLabel = {
-    daily:  '<span class="badge b-muted">resets daily</span>',
-    weekly: '<span class="badge b-muted">resets weekly</span>'
-  };
   sorted.forEach((t, i) => {
-    const el = document.createElement('div');
-    el.className = `item-card task-card ${priClass(t.priority)} ${t.done ? 'done' : ''}`;
-    el.style.animationDelay = `${i * 0.04}s`;
-    el.innerHTML = `
-      <button class="check-btn" onclick="toggleTask('${t.id}')">${checkSvg}</button>
-      <div class="item-info">
-        <div class="item-name">${esc(t.name)}</div>
-        <div class="item-meta">${typeBadgeMap[t.taskType] || ''}${priBadge(t.priority)}${resetLabel[t.taskType] || ''}</div>
-      </div>
-      <button class="del-btn" onclick="delTask('${t.id}')">${delSvg}</button>`;
-    list.appendChild(el);
+    const div = document.createElement('div');
+    div.className = 'item-card task-card ' + priClass(t.priority) + (t.done ? ' done' : '');
+    div.style.animationDelay = (i * 0.04) + 's';
+    div.innerHTML = '<button class="check-btn" onclick="toggleTask(\'' + t.id + '\')">' + checkSvg + '</button>'
+      + '<div class="item-info"><div class="item-name">' + esc(t.name) + '</div>'
+      + '<div class="item-meta">' + (tBadgeMap[t.taskType] || '') + priBadge(t.priority) + (resetLbl[t.taskType] || '') + '</div></div>'
+      + '<button class="del-btn" onclick="delTask(\'' + t.id + '\')">' + delSvg + '</button>';
+    list.appendChild(div);
   });
 }
 
-// ── TABS
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const i = tab === 'habits' ? 0 : 1;
-  document.querySelectorAll('.tab-btn')[i].classList.add('active');
-  document.getElementById(`page-${tab}`).classList.add('active');
+  document.querySelectorAll('.tab-btn')[tab === 'habits' ? 0 : 1].classList.add('active');
+  document.getElementById('page-' + tab).classList.add('active');
 }
 
-// ── THEME
 function applyTheme(dark) {
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  document.getElementById('theme-btn').textContent = dark ? '🌙' : '☀️';
+  document.getElementById('theme-btn').textContent = dark ? '\uD83C\uDF19' : '\u2600\uFE0F';
   const meta = document.getElementById('theme-meta');
   if (meta) meta.content = dark ? '#080C14' : '#EFF5FF';
 }
@@ -733,12 +401,44 @@ function toggleTheme() {
   applyTheme(!isDark);
 }
 
-// ── PWA
 let deferred;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferred = e;
-  document.getElementById('install-btn').style.display = 'inline-block';
-});
+let popupTimer;
+
+function showInstallPopup() {
+  const popup = document.getElementById('install-popup');
+  // set logo src dynamically to avoid large inline attr in HTML
+  const logoImg = document.getElementById('ip-logo-img');
+  const headerLogo = document.querySelector('.app-logo');
+  if (headerLogo) logoImg.src = headerLogo.src;
+  popup.classList.add('show');
+  // restart bar animation
+  const bar = document.getElementById('ip-bar-fill');
+  bar.style.animation = 'none';
+  bar.offsetHeight; // reflow
+  bar.style.animation = 'ipBarShrink 8s linear forwards';
+  // auto-dismiss after 8s
+  clearTimeout(popupTimer);
+  popupTimer = setTimeout(() => dismissPopup(), 8000);
+}
+
+function dismissPopup() {
+  clearTimeout(popupTimer);
+  document.getElementById('install-popup').classList.remove('show');
+  // remember dismissed for this session
+  sessionStorage.setItem('installDismissed', '1');
+}
+
+async function installFromPopup() {
+  dismissPopup();
+  if (!deferred) return;
+  deferred.prompt();
+  const { outcome } = await deferred.userChoice;
+  if (outcome === 'accepted') {
+    document.getElementById('install-btn').style.display = 'none';
+  }
+  deferred = null;
+}
+
 async function installApp() {
   if (!deferred) return;
   deferred.prompt();
@@ -746,26 +446,39 @@ async function installApp() {
   if (outcome === 'accepted') document.getElementById('install-btn').style.display = 'none';
   deferred = null;
 }
-window.addEventListener('appinstalled', () => { document.getElementById('install-btn').style.display = 'none'; });
 
-function setupPWA() {
-  // Just register the service worker with the actual sw.js file
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferred = e;
+  document.getElementById('install-btn').style.display = 'inline-block';
+  // show popup after 1.2s if not dismissed this session
+  if (!sessionStorage.getItem('installDismissed')) {
+    setTimeout(() => showInstallPopup(), 1200);
   }
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-btn').style.display = 'none';
+  dismissPopup();
+});
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(r => r.update())
+      .catch(err => console.warn('SW:', err));
+  });
 }
 
-// ── KEYBOARD
 document.getElementById('h-name').addEventListener('keydown', e => { if (e.key === 'Enter') addHabit(); });
 document.getElementById('t-name').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
 
-// ── INIT
 load();
 resetIfNeeded();
 applyTheme((localStorage.getItem(KTH) || 'dark') === 'dark');
-setupPWA();
 renderHabits();
 renderTasks();
+
 </script>
 </body>
 </html>
