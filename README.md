@@ -13,7 +13,7 @@ A simple and modern daily habit tracking web app.
 
 ## 🌐 Quick start
 
-[👉 Start - Click Here](https://abubakar-khaki.github.io/habit-tracker)
+[👉 Start - Click Here](https://khaki-infj.github.io/habit-tracker))
 
 ## 🛠️ Tech Stack
 
